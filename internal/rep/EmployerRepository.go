@@ -33,3 +33,6 @@ func (eR *EmployerRepository) GetById(id string) (*models.Employers, error) {
 
 	return employer, nil
 }
+
+//func (er *EmployerRepository) createRow() (int, erorr) {
+//}

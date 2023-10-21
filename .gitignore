@@ -6,3 +6,4 @@
 /dataSources.local.xml
 .idea
 go.mod
+go.sum
