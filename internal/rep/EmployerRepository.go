@@ -16,14 +16,14 @@ func NewEmployerRepository(db gorm.DB) *EmployerRepository {
 	}
 }
 
-func (eR *EmployerRepository) GetById(id string) (*models.Employers, error) {
+func (employerRepository *EmployerRepository) GetById(id string) (*models.Employers, error) {
 	if id == "" {
 		return nil, errors.New("не передан идентификатор записи")
 	}
 
 	employer := &models.Employers{}
 
-	res := eR.db.First(employer, id)
+	res := employerRepository.db.First(employer, id).Preload("TypesActivity")
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, errors.New("работодатель не найден")
@@ -34,5 +34,20 @@ func (eR *EmployerRepository) GetById(id string) (*models.Employers, error) {
 	return employer, nil
 }
 
-//func (er *EmployerRepository) createRow() (int, erorr) {
-//}
+func (employerRepository *EmployerRepository) GetByIds(ids []int) ([]models.Employers, error) {
+	if len(ids) == 0 {
+		return nil, errors.New("не переданы идентификаторы записи")
+	}
+
+	var employers []models.Employers
+
+	res := employerRepository.db.Find(&employers, ids)
+	if res.Error != nil {
+		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+			return nil, errors.New("работодатели не найден")
+		}
+		return nil, res.Error
+	}
+
+	return employers, nil
+}

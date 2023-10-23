@@ -1,43 +1,46 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/labstack/echo/v4"
+	"html/template"
 	"net/http"
 	"threeh.com/Employment_Bureau/internal/rep"
+	"threeh.com/Employment_Bureau/internal/services"
 )
 
 type AdminController struct {
-	employerRep rep.EmployerRepository
+	dealingRep       *rep.DealingRepository
+	adminDataService *services.AdminDataService
 }
 
-func NewAdminController(employerRep rep.EmployerRepository) *AdminController {
+func NewAdminController(
+	dealingRep *rep.DealingRepository,
+	adminDataService *services.AdminDataService,
+) *AdminController {
 	return &AdminController{
-		employerRep: employerRep,
+		dealingRep:       dealingRep,
+		adminDataService: adminDataService,
 	}
 }
 
-func (eC *AdminController) Index(w http.ResponseWriter, r *http.Request) error {
-	employerID := r.URL.Query().Get("id")
+func (adminController *AdminController) Index(c echo.Context) error {
+	// to do Обработать_!
+	t := template.Must(template.ParseFiles("./../../resources/views/admin/index.html"))
+	return t.Execute(c.Response().Writer, nil)
+}
 
-	employer, err := eC.employerRep.GetById(employerID)
+func (adminController *AdminController) Dealing(c echo.Context) error {
+	dealings, err := adminController.dealingRep.GetAllDataForAdmin()
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Ошибка при получении работодателя: %s", err.Error()), http.StatusInternalServerError)
-		return nil
+		http.Error(c.Response().Writer, fmt.Sprintf("Ошибка в при получения значения из базы:", err.Error()), http.StatusInternalServerError)
 	}
 
-	response, err := json.Marshal(employer)
+	dataView, err := adminController.adminDataService.GetAllDataForDealing(dealings)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Ошибка при конвертации работодателя в JSON: %s", err.Error()), http.StatusInternalServerError)
-		return nil
+		http.Error(c.Response().Writer, fmt.Sprintf("Ошибка в при получения значения из базы:", err.Error()), http.StatusInternalServerError)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(response)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Ошибка сервера: %s", err.Error()), http.StatusInternalServerError)
-		return nil
-	}
-	return nil
+	t := template.Must(template.ParseFiles("./../../resources/views/admin/dealing.html"))
+	return t.Execute(c.Response(), dataView)
 }

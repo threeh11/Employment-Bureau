@@ -7,8 +7,9 @@ import (
 )
 
 func RunApp(db gorm.DB, e *echo.Echo) {
-	adminContainer := containers.NewAdminContainer(e, db)
-	adminContainer.Build()
+
+	// -- Admin
+	containers.NewAdminContainer(e, db).Build()
 	err := e.Start(":8080")
 	if err != nil {
 		panic(err)

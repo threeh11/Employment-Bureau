@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"threeh.com/Employment_Bureau/internal/controllers"
 	"threeh.com/Employment_Bureau/internal/rep"
+	"threeh.com/Employment_Bureau/internal/services"
 )
 
 type AdminContainer struct {
@@ -19,10 +20,18 @@ func NewAdminContainer(e *echo.Echo, db gorm.DB) *AdminContainer {
 	}
 }
 
-func (aC *AdminContainer) Build() {
-	employerRep := rep.NewEmployerRepository(aC.db)
-	adminController := controllers.NewAdminController(*employerRep)
-	aC.e.GET("/admin", func(c echo.Context) error {
-		return adminController.Index(c.Response(), c.Request())
+func (adminContainer *AdminContainer) Build() {
+
+	// -- Admin
+	dealingRep := rep.NewDealingRepository(adminContainer.db)
+	employerRep := rep.NewEmployerRepository(adminContainer.db)
+	jobSeekersRep := rep.NewJobSeekersRepository(adminContainer.db)
+	adminDataService := services.NewAdminDataService(employerRep, dealingRep, jobSeekersRep)
+	adminController := controllers.NewAdminController(dealingRep, adminDataService)
+	adminContainer.e.GET("/admin", func(c echo.Context) error {
+		return adminController.Index(c)
+	})
+	adminContainer.e.GET("/admin/dealing", func(c echo.Context) error {
+		return adminController.Dealing(c)
 	})
 }

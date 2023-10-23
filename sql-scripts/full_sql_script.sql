@@ -12,7 +12,7 @@ CREATE TABLE employers(
 	id_activity INT NOT NULL,
 	FOREIGN KEY (id_activity) REFERENCES types_activity (id),
 	address_employer VARCHAR(50) NOT NULL,
-	number_employre VARCHAR(12) NOT NULL
+	number_employer VARCHAR(12) NOT NULL
 );
 
 COMMENT ON TABLE employers IS 'Работодатели';
@@ -44,7 +44,7 @@ CREATE TABLE vacancy(
 	get_money INT NOT NULL
 );
 
-CREATE TABLE dealing(
+CREATE TABLE dealings(
 	id INT GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL PRIMARY KEY,
 	id_job_seekers INT NOT NULL,
 	FOREIGN KEY (id_job_seekers) REFERENCES job_seekers (id),

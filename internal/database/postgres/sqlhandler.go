@@ -7,16 +7,16 @@ import (
 	"os"
 )
 
-func SetUpDb() *gorm.DB {
-	err := godotenv.Load("/../../../.env")
+func SetUpDb(pathEnv string) *gorm.DB {
+	err := godotenv.Load(pathEnv)
 	if err != nil {
 		panic(err)
 	}
 	dbHost := os.Getenv("POSTGRES_HOST")
 	dbUser := os.Getenv("POSTGRES_USER")
-	dbPassword := os.Getenv("POSTGRESS_PASSWORD")
-	dbName := os.Getenv("POSTGRESS_DB_NAME")
-	dbPort := os.Getenv("POSTGRESS_PORT")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
+	dbName := os.Getenv("POSTGRES_DB_NAME")
+	dbPort := os.Getenv("POSTGRES_PORT")
 	dsn := "host=" + dbHost +
 		" user=" + dbUser +
 		" password=" + dbPassword +

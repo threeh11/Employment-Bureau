@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
+	pathToEnv := "./../../.env"
 	e := echo.New()
-	db := postgres.SetUpDb()
+	db := postgres.SetUpDb(pathToEnv)
 	app.RunApp(*db, e)
 }
