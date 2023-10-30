@@ -51,3 +51,12 @@ func (employerRepository *EmployerRepository) GetByIds(ids []int) ([]models.Empl
 
 	return employers, nil
 }
+
+func (employerRepository *EmployerRepository) GetAllDataForAdmin() ([]models.Employers, error) {
+	var employer []models.Employers
+	result := employerRepository.db.Find(&employer)
+	if result.Error != nil {
+		return nil, errors.New("не найдено не одной записи")
+	}
+	return employer, nil
+}

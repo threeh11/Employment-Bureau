@@ -16,9 +16,9 @@ func NewDealingRepository(db gorm.DB) *DealingRepository {
 	}
 }
 
-func (dR *DealingRepository) GetAllDataForAdmin() ([]models.Dealing, error) {
+func (dealingRepository *DealingRepository) GetAllDataForAdmin() ([]models.Dealing, error) {
 	var dealing []models.Dealing
-	result := dR.db.Find(&dealing)
+	result := dealingRepository.db.Find(&dealing)
 	if result.Error != nil {
 		return nil, errors.New("не найдено не одной записи")
 	}

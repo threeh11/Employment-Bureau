@@ -27,11 +27,17 @@ func (adminContainer *AdminContainer) Build() {
 	employerRep := rep.NewEmployerRepository(adminContainer.db)
 	jobSeekersRep := rep.NewJobSeekersRepository(adminContainer.db)
 	adminDataService := services.NewAdminDataService(employerRep, dealingRep, jobSeekersRep)
-	adminController := controllers.NewAdminController(dealingRep, adminDataService)
+	adminController := controllers.NewAdminController(dealingRep, employerRep, jobSeekersRep, adminDataService)
 	adminContainer.e.GET("/admin", func(c echo.Context) error {
 		return adminController.Index(c)
 	})
 	adminContainer.e.GET("/admin/dealing", func(c echo.Context) error {
 		return adminController.Dealing(c)
+	})
+	adminContainer.e.GET("/admin/employers", func(c echo.Context) error {
+		return adminController.Employers(c)
+	})
+	adminContainer.e.GET("/admin/job_seekers", func(c echo.Context) error {
+		return adminController.JobSeekers(c)
 	})
 }

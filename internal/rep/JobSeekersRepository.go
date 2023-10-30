@@ -33,3 +33,12 @@ func (jobSeekersRepository *JobSeekersRepository) GetByIds(ids []int) ([]models.
 
 	return jobSeekers, nil
 }
+
+func (jobSeekersRepository *JobSeekersRepository) GetAllDataForAdmin() ([]models.JobSeekers, error) {
+	var jobSeekers []models.JobSeekers
+	result := jobSeekersRepository.db.Find(&jobSeekers)
+	if result.Error != nil {
+		return nil, errors.New("не найдено не одной записи")
+	}
+	return jobSeekers, nil
+}
