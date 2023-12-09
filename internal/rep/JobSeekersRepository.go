@@ -16,14 +16,14 @@ func NewJobSeekersRepository(db gorm.DB) *JobSeekersRepository {
 	}
 }
 
-func (jobSeekersRepository *JobSeekersRepository) GetByIds(ids []int) ([]models.JobSeekers, error) {
+func (tAR *JobSeekersRepository) GetByIds(ids []int) ([]models.JobSeekers, error) {
 	if len(ids) == 0 {
 		return nil, errors.New("не переданы идентификаторы записи")
 	}
 
 	var jobSeekers []models.JobSeekers
 
-	res := jobSeekersRepository.db.Find(&jobSeekers, ids)
+	res := tAR.db.Find(&jobSeekers, ids)
 	if res.Error != nil {
 		if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 			return nil, errors.New("работодатели не найден")
@@ -34,9 +34,9 @@ func (jobSeekersRepository *JobSeekersRepository) GetByIds(ids []int) ([]models.
 	return jobSeekers, nil
 }
 
-func (jobSeekersRepository *JobSeekersRepository) GetAllDataForAdmin() ([]models.JobSeekers, error) {
+func (tAR *JobSeekersRepository) GetAllDataForAdmin() ([]models.JobSeekers, error) {
 	var jobSeekers []models.JobSeekers
-	result := jobSeekersRepository.db.Find(&jobSeekers)
+	result := tAR.db.Find(&jobSeekers)
 	if result.Error != nil {
 		return nil, errors.New("не найдено не одной записи")
 	}

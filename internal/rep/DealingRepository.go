@@ -3,6 +3,7 @@ package rep
 import (
 	"errors"
 	"gorm.io/gorm"
+	"threeh.com/Employment_Bureau/internal/enums"
 	"threeh.com/Employment_Bureau/internal/models"
 )
 
@@ -16,9 +17,18 @@ func NewDealingRepository(db gorm.DB) *DealingRepository {
 	}
 }
 
-func (dealingRepository *DealingRepository) GetAllDataForAdmin() ([]models.Dealing, error) {
+func (dR *DealingRepository) GetAllDataForAdmin() ([]models.Dealing, error) {
 	var dealing []models.Dealing
-	result := dealingRepository.db.Find(&dealing)
+	result := dR.db.Find(&dealing)
+	if result.Error != nil {
+		return nil, errors.New("не найдено не одной записи")
+	}
+	return dealing, nil
+}
+
+func (dR *DealingRepository) GetVacancy() ([]models.Dealing, error) {
+	var dealing []models.Dealing
+	result := dR.db.Where("is_vacancy = ?", enums.VACANCY).Find(&dealing)
 	if result.Error != nil {
 		return nil, errors.New("не найдено не одной записи")
 	}

@@ -19,10 +19,17 @@ func NewDealingContainer(e *echo.Echo, db gorm.DB) *DealingContainer {
 	}
 }
 
-func (dealingContainer *DealingContainer) Build() {
-	dealingRep := rep.NewDealingRepository(dealingContainer.db)
-	dealingController := controllers.NewDealingController(dealingRep)
-	dealingContainer.e.GET("/vacancy", func(c echo.Context) error {
+func (dCon *DealingContainer) Build() {
+	dealingRep := rep.NewDealingRepository(dCon.db)
+	typesRep := rep.NewTypesActivitiesRepository(dCon.db)
+	dealingController := controllers.NewDealingController(dealingRep, typesRep)
+	dCon.e.GET("/vacancy", func(c echo.Context) error {
 		return dealingController.Index(c)
+	})
+	dCon.e.GET("/create-vacancy", func(c echo.Context) error {
+		return dealingController.CrateVacancyIndex(c)
+	})
+	dCon.e.POST("/create-vacancy/save", func(c echo.Context) error {
+		return dealingController.SaveVacancy(c)
 	})
 }
